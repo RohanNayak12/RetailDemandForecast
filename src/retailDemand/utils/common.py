@@ -3,7 +3,7 @@ from box.exceptions import BoxValueError
 from box import ConfigBox
 from ensure import ensure_annotations
 import yaml
-from retailDemand import logger
+from src.retailDemand import logger
 import json
 import joblib
 from pathlib import Path
@@ -25,7 +25,7 @@ def read_yaml(path:Path)-> ConfigBox:
 @ensure_annotations
 def createDir(path:list,verbose=True):
     for p in path:
-        os.makedirs(path,exist_ok=True)
+        os.makedirs(p,exist_ok=True)
         if verbose:
             logger.info(f"Created directory at: {p}")
 
@@ -46,3 +46,8 @@ def loadJson(path:Path)->ConfigBox:
 def saveBin(data:Any,path:Path):
     joblib.dump(value=data,filename=path)
     logger.info(f"Binary file saved at {path}")
+
+@ensure_annotations
+def loadBin(path:Path)-> Any:
+    data=joblib.load(path)
+    logger.info(f"binary file loaded from: {path}")
