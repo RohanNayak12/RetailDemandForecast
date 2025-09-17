@@ -1,0 +1,41 @@
+stages:
+  data_injestion:
+    cmd: set PYTHONPATH=. && python src/retailDemand/pipeline/stage01_data_injestion.py
+    deps:
+      - src/retailDemand/pipeline/stage01_data_injestion.py
+      - config/config.yaml
+    outs:
+      - artifacts/data_injestion/final_data.csv
+
+  base_model:
+    cmd: set PYTHONPATH=. && python src/retailDemand/pipeline/stage02_creating_model.py
+    deps:
+      - src/retailDemand/pipeline/stage02_creating_model.py
+      - config/config.yaml
+      - params.yaml
+      - artifacts/data_injestion/final_data.csv
+    outs:
+      - artifacts/prepare_base_model/base_model.pkl
+  
+  model_train:
+    cmd: set PYTHONPATH=. && python src/retailDemand/pipeline/stage03_model_train.py
+    deps:
+      - src/retailDemand/pipeline/stage03_model_train.py
+      - config/config.yaml
+      - params.yaml
+      - artifacts/prepare_base_model/base_model.pkl
+      - artifacts/data_injestion/final_data.csv
+    outs:
+      - artifacts/model_train/trained_models
+
+  model_eval:
+    cmd: set PYTHONPATH=. && python src/retailDemand/pipeline/stage04_model_eval.py
+    deps:
+      - src/retailDemand/pipeline/stage04_model_eval.py
+      - config/config.yaml
+      - params.yaml
+      - artifacts/data_injestion/final_data.csv
+      - artifacts/model_train/trained_models
+    outs:
+      - artifacts/model_evaluation
+  

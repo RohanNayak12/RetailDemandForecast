@@ -1,0 +1,101 @@
+schema: '2.0'
+stages:
+  data_injestion:
+    cmd: set PYTHONPATH=. && python src/retailDemand/pipeline/stage01_data_injestion.py
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: fe2c7ea0ddd63db71dfa44a01be0b9c4
+      size: 1442
+    - path: src/retailDemand/pipeline/stage01_data_injestion.py
+      hash: md5
+      md5: 1ce45258e1e0c728e8a6503dbc636e11
+      size: 877
+    outs:
+    - path: artifacts/data_injestion/final_data.csv
+      hash: md5
+      md5: 6d10e21ebf49f3aa848c48f8f1277bfc
+      size: 196804015
+  base_model:
+    cmd: set PYTHONPATH=. && python src/retailDemand/pipeline/stage02_creating_model.py
+    deps:
+    - path: artifacts/data_injestion/final_data.csv
+      hash: md5
+      md5: 6d10e21ebf49f3aa848c48f8f1277bfc
+      size: 196804015
+    - path: config/config.yaml
+      hash: md5
+      md5: fe2c7ea0ddd63db71dfa44a01be0b9c4
+      size: 1442
+    - path: params.yaml
+      hash: md5
+      md5: 4d67600b2c7aa05690d0c2354a1813aa
+      size: 249
+    - path: src/retailDemand/pipeline/stage02_creating_model.py
+      hash: md5
+      md5: 713bc814a9fa1cd6aaa8baac1997ff59
+      size: 795
+    outs:
+    - path: artifacts/prepare_base_model/base_model.pkl
+      hash: md5
+      md5: 2ccc266b7d141bc1d47f75923c25f6b8
+      size: 1204
+  model_train:
+    cmd: set PYTHONPATH=. && python src/retailDemand/pipeline/stage03_model_train.py
+    deps:
+    - path: artifacts/data_injestion/final_data.csv
+      hash: md5
+      md5: 6d10e21ebf49f3aa848c48f8f1277bfc
+      size: 196804015
+    - path: artifacts/prepare_base_model/base_model.pkl
+      hash: md5
+      md5: 2ccc266b7d141bc1d47f75923c25f6b8
+      size: 1204
+    - path: config/config.yaml
+      hash: md5
+      md5: fe2c7ea0ddd63db71dfa44a01be0b9c4
+      size: 1442
+    - path: params.yaml
+      hash: md5
+      md5: 4d67600b2c7aa05690d0c2354a1813aa
+      size: 249
+    - path: src/retailDemand/pipeline/stage03_model_train.py
+      hash: md5
+      md5: 6347687c55165b2e0e4954516b84d4e6
+      size: 818
+    outs:
+    - path: artifacts/model_train/trained_models
+      hash: md5
+      md5: fb0f82c477b1157d1dddebe1929a15e3.dir
+      size: 979821
+      nfiles: 45
+  model_eval:
+    cmd: set PYTHONPATH=. && python src/retailDemand/pipeline/stage04_model_eval.py
+    deps:
+    - path: artifacts/data_injestion/final_data.csv
+      hash: md5
+      md5: 6d10e21ebf49f3aa848c48f8f1277bfc
+      size: 196804015
+    - path: artifacts/model_train/trained_models
+      hash: md5
+      md5: fb0f82c477b1157d1dddebe1929a15e3.dir
+      size: 979821
+      nfiles: 45
+    - path: config/config.yaml
+      hash: md5
+      md5: fe2c7ea0ddd63db71dfa44a01be0b9c4
+      size: 1442
+    - path: params.yaml
+      hash: md5
+      md5: 4d67600b2c7aa05690d0c2354a1813aa
+      size: 249
+    - path: src/retailDemand/pipeline/stage04_model_eval.py
+      hash: md5
+      md5: 0a7d68fc6761b921eedd5a795af879e0
+      size: 984
+    outs:
+    - path: artifacts/model_evaluation
+      hash: md5
+      md5: 69b8b68695f17cc86d3ba55129ff4de8.dir
+      size: 987
+      nfiles: 1
