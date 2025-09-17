@@ -13,7 +13,7 @@ class DataInjestionTrainingPipeline:
         data_injestion_config=config.getDataInjestionConfig()
         data_injestion=DataInjestion(config=data_injestion_config)
         data_injestion.download_file()
-        data_injestion.extract_zip_file()
+        data_injestion.save_data()
 
 if __name__=="__main__":
     try:

@@ -2,6 +2,38 @@ artifacts_root: artifacts
 
 data_injestion:
   root_dir: artifacts/data_injestion
-  source_url: "https://drive.google.com/file/d/1o3b5F60AKd245z__9mFBvC_CbsLLoH6S/view?usp=drive_link"
+  source_url: https://drive.google.com/file/d/140EnsVZ6YyG8vDjaLiAm8EvZgzX3bH5B/view?usp=sharing
   local_data_file: artifacts/data_injestion/dataset.zip
   unzip_dir: artifacts/data_injestion
+  final_dataset_dir: artifacts/data_injestion
+
+prepare_base_model:
+  root_dir: artifacts/prepare_base_model
+  base_model_path: artifacts/prepare_base_model/base_model.pkl
+  seasonality_mode: multiplicative
+  daily_seasonality: false
+  weekly_seasonality: true
+  yearly_seasonality: true
+
+model_train:
+  root_dir: artifacts/model_train
+  trained_model_path: artifacts/model_train/trained_models/
+  dataset_path: artifacts/data_injestion/final_data.csv
+  base_model_path: artifacts/prepare_base_model/base_model.pkl
+
+retail_forecasting:
+  root_dir: artifacts/retail_forecasting
+  dataset_dir: artifacts/data_injestion/dataset1
+  model_dir: artifacts/retail_forecasting/models
+  results_dir: artifacts/retail_forecasting/results
+
+model_evaluation:
+  root_dir: artifacts/model_evaluation
+  evaluation_results_path: artifacts/model_evaluation/evaluations_result_path
+  dataset_path: artifacts/data_injestion/final_data.csv
+  model_path: artifacts/model_train/trained_models
+
+model_prediction:
+  root_dir: artifacts/model_evaluation
+  dataset_path: artifacts/data_injestion/final_data.csv
+  model_path: artifacts/model_train/trained_models
