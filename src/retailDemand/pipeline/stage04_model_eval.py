@@ -15,6 +15,7 @@ class ModelEvaluationPipeline:
         model_eval.load_dataset()
         model_eval.evalAll()
         model_eval.save_evaluation_results()
+        model_eval.track_mlflow()
 
 STAGE_NAME= "Model Evaluation Stage"
 

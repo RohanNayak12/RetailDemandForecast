@@ -4,6 +4,8 @@ import pandas as pd
 from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error
 from src.retailDemand import logger
 from src.retailDemand.entity.config_entity import ModelEvaluationConfig
+import dagshub
+import mlflow
 
 
 class ModelEvaluation:
@@ -13,6 +15,7 @@ class ModelEvaluation:
         self.forecasts={}
         self.dataset=None
         self.results={}
+        self.mlflow_res=None
 
     def load_models(self)->dict:
         models={}
@@ -115,5 +118,18 @@ class ModelEvaluation:
         logger.info(f"  Median MAPE: {results_df['MAPE'].median():.2f}%")
         logger.info(f"  Best MAPE: {results_df['MAPE'].min():.2f}% (Store {results_df.loc[results_df['MAPE'].idxmin(), 'Store']})")
         logger.info(f"  Results saved to: {results_path}")
+
+        self.mlflow_res=["Median MAPE",results_df['MAPE'].median()]
         
         return results_df
+    
+    def track_mlflow(self):
+        logger.info("Logging results and experiment to ML_FLOW")
+        dagshub.init(repo_owner='rohanayak2003', repo_name='RetailDemandForecast', mlflow=True)
+        with mlflow.start_run():
+            mlflow.log_param('Forecast Period', f"{self.config.forecast_periods}")
+            mlflow.log_metric(f"{self.mlflow_res[0]}",f"{self.mlflow_res[1]}")
+        logger.info("Loaded results to mlflow")
+
+
+
